@@ -17,7 +17,7 @@ jobs:
     env:
       APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
       APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
-      GRAPH_REF: flyby-lab
+      GRAPH_REF: flyby-lab-demo
     steps:
       - uses: actions/checkout@v2
       - name: Install Rover
