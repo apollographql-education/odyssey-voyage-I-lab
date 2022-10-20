@@ -1,28 +1,36 @@
-const {ApolloServer, gql} = require('apollo-server');
-const {buildSubgraphSchema} = require('@apollo/subgraph');
-const {readFileSync} = require('fs');
+const { ApolloServer } = require('@apollo/server');
+const { startStandaloneServer } = require('@apollo/server/standalone');
+const gql = require('graphql-tag');
+const { buildSubgraphSchema } = require('@apollo/subgraph');
+const { readFileSync } = require('fs');
 
-const typeDefs = gql(readFileSync('./reviews.graphql', {encoding: 'utf-8'}));
+const typeDefs = gql(readFileSync('./reviews.graphql', { encoding: 'utf-8' }));
 const resolvers = require('./resolvers');
-const ReviewsAPI = require('./datasources/ReviewsApi.js');
+const ReviewsAPI = require('./datasources/ReviewsAPI');
 
-const server = new ApolloServer({
-  schema: buildSubgraphSchema({typeDefs, resolvers}),
-  dataSources: () => {
-    return {
-      reviewsAPI: new ReviewsAPI()
-    };
-  }
-});
-
-const port = process.env.PORT || 4002;
-const subgraphName = 'reviews';
-
-server
-  .listen({port})
-  .then(({url}) => {
-    console.log(`🚀 Subgraph ${subgraphName} running at ${url}`);
-  })
-  .catch(err => {
-    console.error(err);
+async function startApolloServer() {
+  const server = new ApolloServer({
+    schema: buildSubgraphSchema({ typeDefs, resolvers }),
   });
+
+  const port = process.env.PORT || 4002;
+  const subgraphName = 'reviews';
+
+  try {
+    const { url } = await startStandaloneServer(server, {
+      context: async () => {
+        return {
+          dataSources: {
+            reviewsAPI: new ReviewsAPI(),
+          },
+        };
+      },
+      listen: { port },
+    });
+    console.log(`🚀 Subgraph ${subgraphName} running at ${url}`);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+startApolloServer();
