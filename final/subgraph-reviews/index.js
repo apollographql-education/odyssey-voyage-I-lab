@@ -1,21 +1,19 @@
-const {ApolloServer} = require('@apollo/server');
+const { ApolloServer } = require('@apollo/server');
 const { startStandaloneServer } = require('@apollo/server/standalone');
-const gql = require('graphql-tag')
-const {buildSubgraphSchema} = require('@apollo/subgraph');
-const {readFileSync} = require('fs');
+const gql = require('graphql-tag');
+const { buildSubgraphSchema } = require('@apollo/subgraph');
+const { readFileSync } = require('fs');
 
-const typeDefs = gql(readFileSync('./reviews.graphql', {encoding: 'utf-8'}));
+const typeDefs = gql(readFileSync('./reviews.graphql', { encoding: 'utf-8' }));
 const resolvers = require('./resolvers');
 const ReviewsAPI = require('./datasources/ReviewsAPI');
 
-
 async function startApolloServer() {
   const server = new ApolloServer({
-    schema: buildSubgraphSchema({typeDefs, resolvers}),
+    schema: buildSubgraphSchema({ typeDefs, resolvers }),
   });
 
-
-  const port = process.env.PORT||4002;
+  const port = process.env.PORT || 4002;
   const subgraphName = 'reviews';
 
   try {
@@ -23,7 +21,7 @@ async function startApolloServer() {
       context: async () => {
         return {
           dataSources: {
-            reviewsAPI: new ReviewsAPI()
+            reviewsAPI: new ReviewsAPI(),
           },
         };
       },
@@ -31,8 +29,8 @@ async function startApolloServer() {
     });
     console.log(`🚀 Subgraph ${subgraphName} running at ${url}`);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 }
-  
-startApolloServer()
+
+startApolloServer();

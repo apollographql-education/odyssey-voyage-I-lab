@@ -1,8 +1,8 @@
 # Voyage I Lab: Updating to Federation v2
 
-Welcome to Voyage I Lab! In this hands-on project we'll take the companion app of Odyssey Voyage I, FlyBy, and update it to use Apollo Federation v2! You can find the [course lessons and instructions in Odyssey](https://odyssey.apollographql.com/voyage-i-lab), Apollo's learning platform.
+Welcome to Voyage I Lab! In this hands-on project we'll take the companion app of Odyssey Voyage I, FlyBy, and update it to use Apollo Federation v2! You can find the [course lessons and instructions in Odyssey](https://www.apollographql.com/tutorials/voyage-1-lab), Apollo's learning platform.
 
-TODO: You can [preview the completed demo app here](https://odyssey-flyby-lab.netlify.app/).
+You can [preview the completed demo app here](https://odyssey-flyby-lab.netlify.app/).
 
 ## How to use this repo
 
@@ -36,11 +36,18 @@ To run the servers in the `final` folder:
 
 1. Open a new terminal window, and navigate to `final/gateway`.
 1. Run `npm install && npm start`. This will install all packages in the main server, then start the main server at `http://localhost:4000`.
+
+   > **Note**: You will need managed federation and a `.env` file for this to work. Refer to the [instructions in Odyssey](https://www.apollographql.com/tutorials/voyage-1-lab/installing-federation-2#authenticating-your-graph).
+
 1. Open another new terminal window, and navigate to `final/subgraph-locations`.
 1. Run `npm install && npm start` again. This will install all packages for the `locations` subgraph, then start the subgraph at `http://localhost:4001`.
 1. Open a third new terminal window, and navigate to `final/subgraph-reviews`.
 1. Run `npm install && npm start` again. This will install all packages for the `reviews` subgraph, then start the subgraph at `http://localhost:4002`.
+1. Open a fourth new terminal window, and navigate to `final/subgraph-activities`.
+1. Run `npm install && npm start` again. This will install all packages for the `activities` subgraph, then start the subgraph at `http://localhost:4003`.
 1. In a web browser, open Apollo Studio Sandbox for `http://localhost:4000`. You should be able to run queries against your gateway server. Some test queries are included in the following section.
+
+   > **Note**: You will need to publish all three subgraphs to a graph in Studio. Refer to the [instructions in Odyssey](https://www.apollographql.com/tutorials/voyage-1-lab/installing-federation-2#publishing-the-subgraphs).
 
 ### Queries
 
@@ -60,18 +67,18 @@ To run the servers in the `final` folder:
 
 1. Get the latest reviews for the homepage.
 
-    ```graphql
-    query LatestReviews {
-      latestReviews {
-        comment
-        rating
-        location {
-          name
-          description
-        }
-      }
-    }
-    ```
+   ```graphql
+   query LatestReviews {
+     latestReviews {
+       comment
+       rating
+       location {
+         name
+         description
+       }
+     }
+   }
+   ```
 
 1. Get details for a specific location.
 
@@ -92,6 +99,7 @@ To run the servers in the `final` folder:
    ```
 
 1. Submit a review for a location.
+
    ```graphql
    mutation submitReview {
      submitReview(review: { comment: "Wow, such a great planet!", rating: 5, locationId: "1" }) {
@@ -102,6 +110,31 @@ To run the servers in the `final` folder:
          id
          comment
          rating
+       }
+     }
+   }
+   ```
+
+1. Get all statistics for both activities and locations.
+
+   ```graphql
+   query GetLocationAndActivityStats {
+     activities {
+       stats {
+         averageTemperature
+         gravity
+         lengthOfDay
+         minimumAge
+         groupSize
+         exosuitRequired
+       }
+     }
+     locations {
+       stats {
+         averageTemperature
+         gravity
+         lengthOfDay
+         minimumAge
        }
      }
    }
