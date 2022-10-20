@@ -23,7 +23,6 @@
     "nodemon": "^2.0.13"
   },
   "devDependencies": {
-    "@trevorblades/eslint-config": "^7.2.8",
     "eslint": "^7.32.0"
   }
 }
