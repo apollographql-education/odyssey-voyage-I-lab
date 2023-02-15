@@ -22,12 +22,6 @@ interface Attraction {
   photo: String!
 }
 
-extend type Location @key(fields: "id") {
-  id: ID! @external
-  "The activities associated with a location"
-  activities: [Activity]
-}
-
 type Activity implements Attraction @key(fields: "id") {
   id: ID!
   "The name of the attraction"
@@ -38,6 +32,4 @@ type Activity implements Attraction @key(fields: "id") {
   photo: String!
   "The activity's terrain"
   terrain: ActivityTerrain!
-  "The activity's location"
-  location: Location
 }
